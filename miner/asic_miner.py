@@ -25,7 +25,7 @@ import socket
 import requests
 from requests.auth import HTTPBasicAuth
 
-VERSION = '1.2.3beta'
+VERSION = '1.2.4beta'
 
 #------- hw.py --------
 #from serial import Serial
@@ -109,6 +109,19 @@ class AsicBoard(object):
     # setup all asics to run on PLL @ 360Mhz
     def set_pll(self):
         for chp in sorted(self.asic):
+            #288 Mhz underclock
+            payload = '%s'%chp + 'ff000100000000400c00' + g_tail
+            self.write_by_hex(payload)
+            time.sleep(0.02)
+            payload = '%s'%chp + 'ff000100000061640c00' + g_tail
+            self.write_by_hex(payload)
+            time.sleep(0.02)
+            payload = '%s'%chp + 'ff000100000061240400' + g_tail
+            self.write_by_hex(payload)
+            time.sleep(0.02)
+            payload = '%s'%chp + 'ff000100000061240000' + g_tail
+            self.write_by_hex(payload)
+            ''' #352 Mhz Stock Clock
             payload = '%s'%chp + 'ff000100000000400c00' + g_tail
             self.write_by_hex(payload)
             time.sleep(0.02)
@@ -117,11 +130,8 @@ class AsicBoard(object):
             time.sleep(0.02)
             payload = '%s'%chp + 'ff0001000000a0220400' + g_tail
             self.write_by_hex(payload)
-	    '''
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff0001000000a0220000' + g_tail
-            self.write_by_hex(payload)
-             # Overdrive 10%
+            '''
+            '''   # 384 Mhz Overclock
             payload = '%s'%chp + 'ff000100000000400c00' + g_tail
             self.write_by_hex(payload)
             time.sleep(0.02)
@@ -130,18 +140,28 @@ class AsicBoard(object):
             time.sleep(0.02)
             payload = '%s'%chp + 'ff000100000060110400' + g_tail
             self.write_by_hex(payload)
-	    '''
+	   
             time.sleep(0.02)
             payload = '%s'%chp + 'ff000100000060110000' + g_tail
             self.write_by_hex(payload)
-
+            '''
     def set_all_idle(self):
-        payload = 'ffff0001000000a0220200' + g_tail
+        #288 Mhz underclock
+        payload = 'ffff000100000061240200' + g_tail
+        #352 Mhz Stock Clock
+        #payload = 'ffff0001000000a0220200' + g_tail
+        # 384 Mhz Overclock
+        #payload = 'ffff000100000060110200' + g_tail
         self.write_by_hex(payload)
 
     def set_all_active(self):
-        payload = 'ffff0001000000a0220000' + g_tail
-        self.write_by_hex(payload) 
+        #288 Mhz underclock
+        payload = 'ffff000100000061240000' + g_tail
+        #352 Mhz Stock Clock
+        #payload = 'ffff0001000000a0220000' + g_tail
+        # 384 Mhz Overclock
+        #payload = 'ffff000100000060110200' + g_tail
+        self.write_by_hex(payload)
 
     def calc_asic_cores(self, scan):
         self.good_cores = 0
@@ -154,7 +174,12 @@ class AsicBoard(object):
             for chp in sorted(self.asic):
                 print 'Scanning ASIC %s...' % chp
                 # set diagnosis mode
-                payload = chp + 'ff0001000000a0220100' + g_tail
+                #288 Mhz underclock
+                payload = chp + 'ff000100000061240100' + g_tail
+                #352 Mhz Stock Clock
+                #payload = chp + 'ff0001000000a0220200' + g_tail
+                # 384 Mhz Overclock
+                #payload = chp + 'ff000100000060110200' + g_tail
                 self.write_by_hex(payload)
                 # give golden sample work, expect 'ecff6386ebd9'
                 # (chp | 0x80) only for diagnosis mode -- allow all answers get returned
@@ -205,7 +230,13 @@ class AsicBoard(object):
         n_offset = start_of_nonce
         for chp in sorted(self.asic):
             # setup nonce incremental = 0x0001
-            payload = ('%s' % chp) + 'ff0001000000a0220000' + g_tail
+            #288 Mhz underclock
+            payload = ('%s' % chp) + 'ff000100000061240000' + g_tail
+            #352 Mhz Stock Clock
+            #payload = ('%s' % chp) + 'ff0001000000a0220000' + g_tail
+            # 384 Mhz Overclock
+            #payload = ('%s' % chp) + 'ff000100000060110200' + g_tail
+            
             time.sleep(0.01)
             self.write_by_hex(payload)
 
@@ -428,7 +459,7 @@ class Miner(Thread):
             self.targetstr = targetstr
             self.diff = 0x0000ffff00000000 / long(targetstr[48:64].decode('hex')[::-1].encode('hex'), 16)
             #self.work_timeout = self.diff * 65536 / 1000000 / 32
-            self.work_timeout = self.diff * 3.44 / brd[self.bid].good_cores
+            self.work_timeout = self.diff * 3.0 / brd[self.bid].good_cores
             if (self.work_timeout < 8):
                 self.work_timeout = 8
         t = '0' * 48 + targetstr[48:64]
@@ -552,7 +583,7 @@ class StratumProxy(object):
         if not self.isRunning:
             self.proxy = subprocess.Popen(['/usr/bin/python', 'stratum-mining-proxy/mining_proxy.py', \
                                                 '-o', stratum_host, '-p', stratum_port, '-gp', getwork_port , \
-                                                '-cu', username, '-cp', password, '-pa', 'scrypt', '-rt', '-cd', \
+                                                '-cu', username, '-cp', password, '-pa', 'scrypt', '-nm', '-rt', '-cd', \
                                                 '-q'], stdout=subprocess.PIPE, shell=False)
             self.isRunning = True
 
@@ -986,7 +1017,7 @@ if __name__ == '__main__':
     com['07'] = Serial(config.p7_com, 115200, timeout=0.01)
 
     # Initialize AsicBoard and do reset
-    print 'Initializing boards (reset, flush, setup PLL)...'
+    print 'Initializing boards (reset, flush, setup PLL UNDERCLOCK)...'
     for b in sorted(brd):
         brd[b] = AsicBoard(com[b], rst[b], alche_protocol[b])
         brd[b].reset()
