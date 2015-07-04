@@ -84,6 +84,17 @@ function ws_on_error(evt)
 
 }
 
+function format_secounds(seconds){
+  function pad(s){
+    return (s < 10 ? '0' : '') + s;
+  }
+  var hours = Math.floor(seconds / (60*60));
+  var minutes = Math.floor(seconds % (60*60) / 60);
+  var seconds = Math.floor(seconds % 60);
+
+  return pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+}
+
 function ws_on_msg(evt)
 {
 	var rx;
@@ -91,6 +102,9 @@ function ws_on_msg(evt)
 	var t = new Date();
 	var miner_ver;
 	var a;
+  function pad(s){
+    return (s < 10 ? '0' : '') + s;
+  }
 
 	rx = JSON.parse(evt.data);
 
@@ -109,13 +123,20 @@ function ws_on_msg(evt)
 
 		case "s1":
 			a = new Date(rx.result["since"]*1000);
-			var year = a.getFullYear();
-			var mth = a.getMonth()+1;
-			var date = a.getDate();
-			var hr = a.getHours();
-			var min = a.getMinutes();
-			var sec = a.getSeconds();
-			var since_str = "Since: " + year + "/" + mth + "/" + date + "  " + hr + ":" + min + ":" + sec + ",   accepted / rejected: " + rx.result["accepted"] + " / " + rx.result["rejected"];
+
+			var year = t.getFullYear();
+			var mth = t.getMonth()+1;
+			var date = t.getDate();
+			var hr = t.getHours();
+			var min = t.getMinutes();
+			var sec = t.getSeconds();
+
+			var hashingTimeSec = (t.getTime() - a.getTime()) / 1000;
+			var runningFor = format_secounds(hashingTimeSec);
+			var totalAccRej = rx.result["accepted"] + rx.result["rejected"];
+			var rPercent = (totalAccRej > 0) ? (rx.result["rejected"] / (rx.result["accepted"] + rx.result["rejected"])) * 100 : 0;
+
+			var since_str = "Up: " + runningFor + " Accept: " + rx.result["accepted"] + " Reject: " + rx.result["rejected"] + " (" + rPercent.toFixed(2) + "%)";
 
 			brd0_khr = rx.result["00"]/1000;
 			brd1_khr = rx.result["01"]/1000;
@@ -135,7 +156,7 @@ function ws_on_msg(evt)
 			document.getElementById("brd5_khr").innerHTML = brd5_khr.toFixed(2).toString();
 			document.getElementById("brd6_khr").innerHTML = brd6_khr.toFixed(2).toString();
 			document.getElementById("brd7_khr").innerHTML = brd7_khr.toFixed(2).toString();
-			document.getElementById("s1_txt_timestamp").innerHTML = t.getHours()+":"+t.getMinutes()+":"+t.getSeconds();
+			document.getElementById("s1_txt_timestamp").innerHTML = year + "-" + pad(mth) + "-" + pad(date) + " " + pad(hr) + ":" + pad(min) + ":" + pad(sec);
 			document.getElementById("s1_txt_since").innerHTML = since_str;
 			break;
 
