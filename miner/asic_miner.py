@@ -113,13 +113,13 @@ class AsicBoard(object):
             payload = '%s'%chp + 'ff000100000000400c00' + g_tail
             self.write_by_hex(payload)
             time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000020610c00' + g_tail
+            payload = '%s'%chp + 'ff000100000060620c00' + g_tail
             self.write_by_hex(payload)
             time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000020210400' + g_tail
+            payload = '%s'%chp + 'ff000100000060220400' + g_tail
             self.write_by_hex(payload)
             time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000020210000' + g_tail
+            payload = '%s'%chp + 'ff000100000060220000' + g_tail
             self.write_by_hex(payload)
             '''#288 Mhz underclock
             payload = '%s'%chp + 'ff000100000000400c00' + g_tail
@@ -163,7 +163,7 @@ class AsicBoard(object):
             '''
     def set_all_idle(self):
         #320 Mhz underclock
-        payload = 'ffff000100000020210200' + g_tail
+        payload = 'ffff000100000060220200' + g_tail
         #288 Mhz underclock
         #payload = 'ffff000100000061240200' + g_tail
         #352 Mhz Stock Clock
@@ -174,7 +174,7 @@ class AsicBoard(object):
 
     def set_all_active(self):
         #320 Mhz underclock
-        payload = 'ffff000100000020210000' + g_tail
+        payload = 'ffff000100000060220000' + g_tail
         #288 Mhz underclock
         #payload = 'ffff000100000061240000' + g_tail
         #352 Mhz Stock Clock
@@ -195,7 +195,7 @@ class AsicBoard(object):
                 print 'Scanning ASIC %s...' % chp
                 # set diagnosis mode
                 #320 Mhz underclock
-                payload = chp + 'ff000100000020210100' + g_tail
+                payload = chp + 'ff000100000060220100' + g_tail
                 #288 Mhz underclock
                 #payload = chp + 'ff000100000061240100' + g_tail
                 #352 Mhz Stock Clock
@@ -253,7 +253,7 @@ class AsicBoard(object):
         for chp in sorted(self.asic):
             # setup nonce incremental = 0x0001
             #320 Mhz underclock
-            payload = ('%s' % chp) + 'ff000100000020210000' + g_tail
+            payload = ('%s' % chp) + 'ff000100000060220000' + g_tail
             #288 Mhz underclock
             #payload = ('%s' % chp) + 'ff000100000061240000' + g_tail
             #352 Mhz Stock Clock
