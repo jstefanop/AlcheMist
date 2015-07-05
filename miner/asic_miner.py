@@ -106,22 +106,10 @@ class AsicBoard(object):
         while len(resp) > 0:
             resp = self.com_port.read(count)
 
-    # setup all asics to run on PLL
+    # setup all asics to run on PLL @ 360Mhz
     def set_pll(self):
         for chp in sorted(self.asic):
-            #320 Mhz underclock
-            payload = '%s'%chp + 'ff000100000000400c00' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000020610c00' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000020210400' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000020210000' + g_tail
-            self.write_by_hex(payload)
-            '''#288 Mhz underclock
+            #288 Mhz underclock
             payload = '%s'%chp + 'ff000100000000400c00' + g_tail
             self.write_by_hex(payload)
             time.sleep(0.02)
@@ -133,7 +121,6 @@ class AsicBoard(object):
             time.sleep(0.02)
             payload = '%s'%chp + 'ff000100000061240000' + g_tail
             self.write_by_hex(payload)
-            '''
             ''' #352 Mhz Stock Clock
             payload = '%s'%chp + 'ff000100000000400c00' + g_tail
             self.write_by_hex(payload)
@@ -142,9 +129,6 @@ class AsicBoard(object):
             self.write_by_hex(payload)
             time.sleep(0.02)
             payload = '%s'%chp + 'ff0001000000a0220400' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff0001000000a0220000' + g_tail
             self.write_by_hex(payload)
             '''
             '''   # 384 Mhz Overclock
@@ -162,10 +146,8 @@ class AsicBoard(object):
             self.write_by_hex(payload)
             '''
     def set_all_idle(self):
-        #320 Mhz underclock
-        payload = 'ffff000100000020210200' + g_tail
         #288 Mhz underclock
-        #payload = 'ffff000100000061240200' + g_tail
+        payload = 'ffff000100000061240200' + g_tail
         #352 Mhz Stock Clock
         #payload = 'ffff0001000000a0220200' + g_tail
         # 384 Mhz Overclock
@@ -173,10 +155,8 @@ class AsicBoard(object):
         self.write_by_hex(payload)
 
     def set_all_active(self):
-        #320 Mhz underclock
-        payload = 'ffff000100000020210000' + g_tail
         #288 Mhz underclock
-        #payload = 'ffff000100000061240000' + g_tail
+        payload = 'ffff000100000061240000' + g_tail
         #352 Mhz Stock Clock
         #payload = 'ffff0001000000a0220000' + g_tail
         # 384 Mhz Overclock
@@ -194,10 +174,8 @@ class AsicBoard(object):
             for chp in sorted(self.asic):
                 print 'Scanning ASIC %s...' % chp
                 # set diagnosis mode
-                #320 Mhz underclock
-                payload = chp + 'ff000100000020210100' + g_tail
                 #288 Mhz underclock
-                #payload = chp + 'ff000100000061240100' + g_tail
+                payload = chp + 'ff000100000061240100' + g_tail
                 #352 Mhz Stock Clock
                 #payload = chp + 'ff0001000000a0220200' + g_tail
                 # 384 Mhz Overclock
@@ -252,10 +230,8 @@ class AsicBoard(object):
         n_offset = start_of_nonce
         for chp in sorted(self.asic):
             # setup nonce incremental = 0x0001
-            #320 Mhz underclock
-            payload = ('%s' % chp) + 'ff000100000020210000' + g_tail
             #288 Mhz underclock
-            #payload = ('%s' % chp) + 'ff000100000061240000' + g_tail
+            payload = ('%s' % chp) + 'ff000100000061240000' + g_tail
             #352 Mhz Stock Clock
             #payload = ('%s' % chp) + 'ff0001000000a0220000' + g_tail
             # 384 Mhz Overclock
