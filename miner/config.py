@@ -22,7 +22,7 @@ class ArgsConfig(object):
         self.immediately_run = False
         self.force_diag = False
         self.p0_reset = 'gpio117'
-       ''' self.p1_reset = 'gpio110'
+        ''' self.p1_reset = 'gpio110'
         self.p2_reset = 'gpio111'
         self.p3_reset = 'gpio112'
         self.p4_reset = 'gpio113'
@@ -74,7 +74,7 @@ class ArgsConfig(object):
 
         self.p0_reset = self.config.get('hardware', 'p0_reset')
         self.p0_com = self.config.get('hardware', 'p0_com')
-       ''' self.p1_reset = self.config.get('hardware', 'p1_reset')
+        ''' self.p1_reset = self.config.get('hardware', 'p1_reset')
         self.p1_com = self.config.get('hardware', 'p1_com')
         self.p2_reset = self.config.get('hardware', 'p2_reset')
         self.p2_com = self.config.get('hardware', 'p2_com')
@@ -88,7 +88,7 @@ class ArgsConfig(object):
         self.p6_com = self.config.get('hardware', 'p6_com')
         self.p7_reset = self.config.get('hardware', 'p7_reset')
         self.p7_com = self.config.get('hardware', 'p7_com')
-'''
+        '''
         return True
 
     def save_config(self):

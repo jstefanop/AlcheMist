@@ -1029,7 +1029,7 @@ if __name__ == '__main__':
     rst['05'] = config.p5_reset
     rst['06'] = config.p6_reset
     rst['07'] = config.p7_reset
-'''
+    '''
     print 'Opening serial ports...'
     com['00'] = Serial(config.p0_com, 115200, timeout=0.01)
     '''com['01'] = Serial(config.p1_com, 115200, timeout=0.01)
@@ -1039,7 +1039,7 @@ if __name__ == '__main__':
     com['05'] = Serial(config.p5_com, 115200, timeout=0.01)
     com['06'] = Serial(config.p6_com, 115200, timeout=0.01)
     com['07'] = Serial(config.p7_com, 115200, timeout=0.01)
-'''
+    '''
     # Initialize AsicBoard and do reset
     print 'Initializing boards (reset, flush, setup PLL UNDERCLOCK)...'
     for b in sorted(brd):
@@ -1081,7 +1081,7 @@ if __name__ == '__main__':
     com['05'] = SerialPort(alche_protocol['05'], config.p5_com, reactor, baudrate=115200)
     com['06'] = SerialPort(alche_protocol['06'], config.p6_com, reactor, baudrate=115200)
     com['07'] = SerialPort(alche_protocol['07'], config.p7_com, reactor, baudrate=115200)
-'''
+    '''
     print 'Re-initializing boards (reset, setup PLL)...'
     for b in sorted(brd):
         brd[b].set_comport_async_mode()
