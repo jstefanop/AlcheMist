@@ -1,7 +1,9 @@
 # AlcheMist
 
 
-This is the Python driver for the Alchemist Scrypt Alcheminer ASIC. This code has been updated and modified heavily by the community from the stock firmware, and provides much better stratum stability, updates to the web UI, and options for over/underclocking.
+This is the Python driver modified to run on a raspberry pi, and can control an individual Alcheminer blade using the UART pins on the pi (or more if you use USB->UART dongles).
+
+
 
 Code is maintained by jstefanop (jstefanop at mac.com)
 
@@ -10,6 +12,55 @@ Donations are always appreciated!
 LTC: LX5vpxrQE4eLRLPobKwZhw2comkKFCh3p4 
 
 BTC: 1N7XfuyUPSFo32o4pgzx8khJp8iGdsojqL
+
+#Install
+
+Follow these instructions to get your pi ready to run the driver
+
+Update your pi
+
+```
+sudo apt-get update
+sudo apt-get upgrade
+```
+
+Install python-dev and build essentials
+
+```
+sudo apt-get install python-dev
+sudo apt-get install build-essential
+```
+
+Install twisted
+
+```
+wget https://pypi.python.org/packages/source/T/Twisted/Twisted-12.2.0.tar.bz2#md5=9a321b904d01efd695079f8484b37861
+tar jxf Twisted-12.2.0.tar.bz2 
+sudo python setup.py build
+sudo python setup.py install --prefix=/usr/local
+```
+
+Install autobahn (need pip to do this)
+
+```
+sudo apt-get install python-pip
+sudo pip install autobahn[twisted]
+```
+
+We now need to free up the serial port on the pi that is being used for console output, to do this download this scrypt, run it and reboot
+
+```
+sudo wget https://raw.githubusercontent.com/lurch/rpi-serial-console/master/rpi-serial-console -O /usr/bin/rpi-serial-console && sudo chmod +x /usr/bin/rpi-serial-console
+sudo rpi-serial-console disable
+sudo reboot
+```
+
+cd to home directory and install this repo
+
+```
+git clone -b AlcheMist_raspi https://github.com/jstefanop/AlcheMist.git
+```
+
 
 ---
 #Clock Speed
