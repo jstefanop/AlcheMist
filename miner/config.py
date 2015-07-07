@@ -22,14 +22,16 @@ class ArgsConfig(object):
         self.immediately_run = False
         self.force_diag = False
         self.p0_reset = 'gpio117'
-        self.p1_reset = 'gpio110'
+       ''' self.p1_reset = 'gpio110'
         self.p2_reset = 'gpio111'
         self.p3_reset = 'gpio112'
         self.p4_reset = 'gpio113'
         self.p5_reset = 'gpio114'
         self.p6_reset = 'gpio115'
         self.p7_reset = 'gpio116'
-        self.p0_com = '/dev/ttyO1'
+        '''
+        self.p0_com = '/dev/ttyAMA0'
+        '''
         self.p1_com = '/dev/ttyO2'
         self.p2_com = '/dev/ttyO3'
         self.p3_com = '/dev/ttyO4'
@@ -37,6 +39,7 @@ class ArgsConfig(object):
         self.p5_com = '/dev/ttyUSB1'
         self.p6_com = '/dev/ttyUSB2'
         self.p7_com = '/dev/ttyUSB3'
+        '''
 
     def read_config(self):
 
@@ -51,10 +54,12 @@ class ArgsConfig(object):
             if self.config.has_option('pool', candidate) is False:
                 print '\'%s\' does not exist in section [%s]!' % (candidate, 'pool')
                 return False
-        for candidate in ['p0_reset', 'p1_reset', 'p2_reset', 'p3_reset', \
-                          'p4_reset', 'p5_reset', 'p6_reset', 'p7_reset', \
-                          'p0_com', 'p1_com', 'p2_com', 'p3_com', \
-                          'p4_com', 'p5_com', 'p6_com', 'p7_com']:
+            for candidate in ['p0_reset', 'p0_com']:
+                # ['p0_reset', 'p1_reset',
+                #         'p2_reset', 'p3_reset', \
+                 #         'p4_reset', 'p5_reset', 'p6_reset', 'p7_reset', \
+                  #        'p0_com', 'p1_com', 'p2_com', 'p3_com', \
+                   #       'p4_com', 'p5_com', 'p6_com', 'p7_com']:
             if self.config.has_option('hardware', candidate) is False:
                 print 'Errors in [hardware] section!'
                 return False
@@ -69,7 +74,7 @@ class ArgsConfig(object):
 
         self.p0_reset = self.config.get('hardware', 'p0_reset')
         self.p0_com = self.config.get('hardware', 'p0_com')
-        self.p1_reset = self.config.get('hardware', 'p1_reset')
+       ''' self.p1_reset = self.config.get('hardware', 'p1_reset')
         self.p1_com = self.config.get('hardware', 'p1_com')
         self.p2_reset = self.config.get('hardware', 'p2_reset')
         self.p2_com = self.config.get('hardware', 'p2_com')
@@ -83,7 +88,7 @@ class ArgsConfig(object):
         self.p6_com = self.config.get('hardware', 'p6_com')
         self.p7_reset = self.config.get('hardware', 'p7_reset')
         self.p7_com = self.config.get('hardware', 'p7_com')
-
+'''
         return True
 
     def save_config(self):

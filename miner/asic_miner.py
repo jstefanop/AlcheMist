@@ -1022,24 +1022,24 @@ if __name__ == '__main__':
         sys.exit()
 
     rst['00'] = config.p0_reset
-    rst['01'] = config.p1_reset
+    '''rst['01'] = config.p1_reset
     rst['02'] = config.p2_reset
     rst['03'] = config.p3_reset
     rst['04'] = config.p4_reset
     rst['05'] = config.p5_reset
     rst['06'] = config.p6_reset
     rst['07'] = config.p7_reset
-
+'''
     print 'Opening serial ports...'
     com['00'] = Serial(config.p0_com, 115200, timeout=0.01)
-    com['01'] = Serial(config.p1_com, 115200, timeout=0.01)
+    '''com['01'] = Serial(config.p1_com, 115200, timeout=0.01)
     com['02'] = Serial(config.p2_com, 115200, timeout=0.01)
     com['03'] = Serial(config.p3_com, 115200, timeout=0.01)
     com['04'] = Serial(config.p4_com, 115200, timeout=0.01)
     com['05'] = Serial(config.p5_com, 115200, timeout=0.01)
     com['06'] = Serial(config.p6_com, 115200, timeout=0.01)
     com['07'] = Serial(config.p7_com, 115200, timeout=0.01)
-
+'''
     # Initialize AsicBoard and do reset
     print 'Initializing boards (reset, flush, setup PLL UNDERCLOCK)...'
     for b in sorted(brd):
@@ -1074,14 +1074,14 @@ if __name__ == '__main__':
         com[b].close()
 
     com['00'] = SerialPort(alche_protocol['00'], config.p0_com, reactor, baudrate=115200)
-    com['01'] = SerialPort(alche_protocol['01'], config.p1_com, reactor, baudrate=115200)
+    '''com['01'] = SerialPort(alche_protocol['01'], config.p1_com, reactor, baudrate=115200)
     com['02'] = SerialPort(alche_protocol['02'], config.p2_com, reactor, baudrate=115200)
     com['03'] = SerialPort(alche_protocol['03'], config.p3_com, reactor, baudrate=115200)
     com['04'] = SerialPort(alche_protocol['04'], config.p4_com, reactor, baudrate=115200)
     com['05'] = SerialPort(alche_protocol['05'], config.p5_com, reactor, baudrate=115200)
     com['06'] = SerialPort(alche_protocol['06'], config.p6_com, reactor, baudrate=115200)
     com['07'] = SerialPort(alche_protocol['07'], config.p7_com, reactor, baudrate=115200)
-
+'''
     print 'Re-initializing boards (reset, setup PLL)...'
     for b in sorted(brd):
         brd[b].set_comport_async_mode()
