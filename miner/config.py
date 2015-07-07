@@ -55,14 +55,14 @@ class ArgsConfig(object):
                 print '\'%s\' does not exist in section [%s]!' % (candidate, 'pool')
                 return False
             for candidate in ['p0_reset', 'p0_com']:
-                # ['p0_reset', 'p1_reset',
-                #         'p2_reset', 'p3_reset', \
+                        # ['p0_reset', 'p1_reset',
+                #          'p2_reset', 'p3_reset', \
                  #         'p4_reset', 'p5_reset', 'p6_reset', 'p7_reset', \
                   #        'p0_com', 'p1_com', 'p2_com', 'p3_com', \
                    #       'p4_com', 'p5_com', 'p6_com', 'p7_com']:
-            if self.config.has_option('hardware', candidate) is False:
-                print 'Errors in [hardware] section!'
-                return False
+                if self.config.has_option('hardware', candidate) is False:
+                    print 'Errors in [hardware] section!'
+                    return False
 
         self.protocol = self.config.get('pool', 'protocol')
         self.host = self.config.get('pool', 'host')
