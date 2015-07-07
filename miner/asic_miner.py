@@ -10,7 +10,7 @@ import os.path
 import binascii
 import subprocess
 from crypt import crypt
-import rdf022
+#import rdf022
 import Queue
 from serial import Serial
 from threading import Thread, Event
@@ -335,12 +335,12 @@ stat_reset = Event()
 stratum_proxy_isRunning = False
 ws_client = []
 
-lcm = rdf022.get_lcm()
+'''lcm = rdf022.get_lcm()
 def lcm_disp(msg):
     msgs = ('IP:'+rdf022.get_ip(), msg)
     lcm.messages = msgs
     lcm.refresh()
-
+'''
 class CoinRPC(object):
     def __init__(self, host, port, username, password):
 		self.host = host
@@ -915,7 +915,7 @@ class WebUIProtocol(WebSocketServerProtocol):
 
         return
 
-lcm_disp('Hello, miner...')
+#lcm_disp('Hello, miner...')
 
 def refresh_khrate():
     stat.refresh_khrate()
@@ -925,14 +925,14 @@ def web_display():
     for i in ws_client:
         reactor.callFromThread(WebSocketServerProtocol.sendMessage, i, json.dumps(rsp))
 
-def lcm_display():
+'''def lcm_display():
     total_khashrate = 0
     for i in ['00', '01', '02', '03', '04', '05', '06', '07']:
         total_khashrate += stat.khrate[i]
         #print '-- Total hash rate: %0.2f' % total_khashrate
         #print '-- Total submit: accepted (%d), rejected (%d)' % (self.total_accepted, self.total_rejected)
     lcm_disp('HR: %0.2f Mh/s' % (total_khashrate/1000))
-
+'''
 def stratum_monitor():
     '''
     if (config.protocol == 'stratum+tcp:'):
@@ -1138,8 +1138,8 @@ if __name__ == '__main__':
 
     webdisp = LoopingCall(web_display)
     webdisp.start(WEB_REFRESH_TIME)
-    lcmdisp = LoopingCall(lcm_display)
-    lcmdisp.start(LCM_REFRESH_TIME)
+    # lcmdisp = LoopingCall(lcm_display)
+    #lcmdisp.start(LCM_REFRESH_TIME)
     refkh = LoopingCall(refresh_khrate)
     refkh.start(REFRESH_KHRATE_TIME)
 
