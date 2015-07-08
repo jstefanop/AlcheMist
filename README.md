@@ -67,6 +67,14 @@ cd to home directory and install this repo
 git clone -b AlcheMist_raspi https://github.com/jstefanop/AlcheMist.git
 ```
 
+Need to compile some libraries used by stratum proxy for rasp pi CPU
+
+```
+cd Alchemis/miner/stratum-mining-proxy/litecoin_scrypt
+sudo python setup.py install
+cd Alchemis/miner/stratum-mining-proxy/midstatec
+make
+```
 
 ---
 #Clock Speed
