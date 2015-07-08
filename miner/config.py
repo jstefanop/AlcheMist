@@ -21,7 +21,7 @@ class ArgsConfig(object):
         self.password = None
         self.immediately_run = False
         self.force_diag = False
-        self.p0_reset = 'gpio117'
+        self.p0_reset = 'gpio23'
         ''' self.p1_reset = 'gpio110'
         self.p2_reset = 'gpio111'
         self.p3_reset = 'gpio112'

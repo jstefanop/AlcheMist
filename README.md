@@ -55,6 +55,12 @@ sudo rpi-serial-console disable
 sudo reboot
 ```
 
+Set up the board reset GPIO pin to 23
+```
+echo 23 > /sys/class/gpio/export
+echo out > /sys/class/gpio/gpio23/direction
+```
+
 cd to home directory and install this repo
 
 ```
