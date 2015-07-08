@@ -315,13 +315,19 @@ WEB_REFRESH_TIME = 5
 LCM_REFRESH_TIME = 5
 REFRESH_KHRATE_TIME = 5
 STRATUM_CHK_INTERVAL = 30
-
-rst = {'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
-com = {'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
-brd = {'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
-pool_ctrl = {'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
-alche_protocol = {'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
-ans_queue = {'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
+#only one board is configured for pi
+rst = {'00':None}
+#{'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
+com = {'00':None}
+#{'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
+brd = {'00':None}
+#{'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
+pool_ctrl = {'00':None}
+#{'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
+alche_protocol = {'00':None}
+#{'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
+ans_queue = {'00':None}
+#{'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
 
 active_brd_num = 0
 active_brd = []
