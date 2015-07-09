@@ -55,11 +55,6 @@ sudo rpi-serial-console disable
 sudo reboot
 ```
 
-Set up the board reset GPIO pin to 23
-```
-echo 23 > /sys/class/gpio/export
-echo out > /sys/class/gpio/gpio23/direction
-```
 
 cd to home directory and install this repo
 
@@ -67,13 +62,34 @@ cd to home directory and install this repo
 git clone -b AlcheMist_raspi https://github.com/jstefanop/AlcheMist.git
 ```
 
+Install stratum libraries
+```
+cd Alchemist/miner/stratum-mining-proxy/
+sudo python setup.py develop
+```
+
 Need to compile some libraries used by stratum proxy for rasp pi CPU
 
 ```
-cd Alchemis/miner/stratum-mining-proxy/litecoin_scrypt
+cd Alchemist/miner/stratum-mining-proxy/litecoin_scrypt
 sudo python setup.py install
-cd Alchemis/miner/stratum-mining-proxy/midstatec
+cd Alchemist/miner/stratum-mining-proxy/midstatec
 make
+```
+
+Thats it! Now connect your pi to the UART port using jumper cables or create your own UART harness
+UART connect on board is labeled 1-6 Pin 1 is RX, 2 TX, 4 GND, 6 Board Reset
+Connect RX Pin to TX on pi, TX pin to RX, GND to GND, and reset pin to GPIO pin 23 on pi. 
+
+To start miner run
+
+```
+cd Alchemist/miner
+sudo sh go&
+```
+to stop
+```
+sudo sh shutdown
 ```
 
 ---
