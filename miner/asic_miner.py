@@ -253,13 +253,13 @@ class AsicBoard(object):
         for chp in sorted(self.asic):
             # setup nonce incremental = 0x0001
             #320 Mhz underclock
-            payload = ('%s' % chp) + 'ff000100000060220000' + g_tail
+            #payload = ('%s' % chp) + 'ff000100000060220000' + g_tail
             #288 Mhz underclock
             #payload = ('%s' % chp) + 'ff000100000061240000' + g_tail
             #352 Mhz Stock Clock
             #payload = ('%s' % chp) + 'ff0001000000a0220000' + g_tail
             # 384 Mhz Overclock
-            #payload = ('%s' % chp) + 'ff000100000060110200' + g_tail
+            payload = ('%s' % chp) + 'ff0001000000e0220000' + g_tail
             
             time.sleep(0.01)
             self.write_by_hex(payload)
