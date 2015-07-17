@@ -147,18 +147,17 @@ class AsicBoard(object):
             payload = '%s'%chp + 'ff0001000000a0220000' + g_tail
             self.write_by_hex(payload)
             '''
-            '''   # 384 Mhz Overclock
+            '''# 384 Mhz Overclock
             payload = '%s'%chp + 'ff000100000000400c00' + g_tail
             self.write_by_hex(payload)
             time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000060410c00' + g_tail
+            payload = '%s'%chp + 'ff0001000000e0620c00' + g_tail
             self.write_by_hex(payload)
             time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000060110400' + g_tail
+            payload = '%s'%chp + 'ff0001000000e0220400' + g_tail
             self.write_by_hex(payload)
-	   
             time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000060110000' + g_tail
+            payload = '%s'%chp + 'ff0001000000e0220000' + g_tail
             self.write_by_hex(payload)
             '''
     def set_all_idle(self):
@@ -169,7 +168,7 @@ class AsicBoard(object):
         #352 Mhz Stock Clock
         #payload = 'ffff0001000000a0220200' + g_tail
         # 384 Mhz Overclock
-        #payload = 'ffff000100000060110200' + g_tail
+        #payload = 'ffff0001000000e0220200' + g_tail
         self.write_by_hex(payload)
 
     def set_all_active(self):
@@ -180,7 +179,7 @@ class AsicBoard(object):
         #352 Mhz Stock Clock
         #payload = 'ffff0001000000a0220000' + g_tail
         # 384 Mhz Overclock
-        #payload = 'ffff000100000060110200' + g_tail
+        #payload = 'ffff0001000000e0220000' + g_tail
         self.write_by_hex(payload)
 
     def calc_asic_cores(self, scan):
@@ -199,9 +198,9 @@ class AsicBoard(object):
                 #288 Mhz underclock
                 #payload = chp + 'ff000100000061240100' + g_tail
                 #352 Mhz Stock Clock
-                #payload = chp + 'ff0001000000a0220200' + g_tail
+                #payload = chp + 'ff0001000000a0220100' + g_tail
                 # 384 Mhz Overclock
-                #payload = chp + 'ff000100000060110200' + g_tail
+                #payload = chp + 'ff0001000000e0220100' + g_tail
                 self.write_by_hex(payload)
                 # give golden sample work, expect 'ecff6386ebd9'
                 # (chp | 0x80) only for diagnosis mode -- allow all answers get returned
@@ -259,7 +258,7 @@ class AsicBoard(object):
             #352 Mhz Stock Clock
             #payload = ('%s' % chp) + 'ff0001000000a0220000' + g_tail
             # 384 Mhz Overclock
-            #payload = ('%s' % chp) + 'ff000100000060110200' + g_tail
+            #payload = ('%s' % chp) + 'ff0001000000e0220000' + g_tail
             
             time.sleep(0.01)
             self.write_by_hex(payload)
@@ -568,6 +567,8 @@ class Stat(Thread):
         for i in ['00', '01', '02', '03', '04', '05', '06', '07']:
             self.khrate[i] = self.acc_kh[i] / (time.time() - self.miner_stt_time)
 
+
+
     def run(self):
         while True:
             (bid, sr, tgt, nnc_bin) = hash_queue.get()
@@ -584,6 +585,7 @@ class Stat(Thread):
             else:
                 self.total_rejected += 1
                 self.khrate['rejected'] = self.total_rejected
+                print '-- Total submit: accepted (%d), rejected (%d), %%rejected (%.2f)' % (self.total_accepted, self.total_rejected, 100*float(self.total_rejected)/(self.total_rejected+self.total_accepted))
 
             hash_queue.task_done()
 
@@ -932,6 +934,7 @@ def lcm_display():
         #print '-- Total hash rate: %0.2f' % total_khashrate
         #print '-- Total submit: accepted (%d), rejected (%d)' % (self.total_accepted, self.total_rejected)
     lcm_disp('HR: %0.2f Mh/s' % (total_khashrate/1000))
+
 
 def stratum_monitor():
     '''
