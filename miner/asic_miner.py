@@ -148,7 +148,7 @@ class AsicBoard(object):
             payload = '%s'%chp + 'ff0001000000a0220000' + g_tail
             self.write_by_hex(payload)
             '''
-            # 384 Mhz Overclock
+            '''# 384 Mhz Overclock
             payload = '%s'%chp + 'ff000100000000400c00' + g_tail
             self.write_by_hex(payload)
             time.sleep(0.02)
@@ -160,27 +160,27 @@ class AsicBoard(object):
             time.sleep(0.02)
             payload = '%s'%chp + 'ff0001000000e0220000' + g_tail
             self.write_by_hex(payload)
-    
+            '''
     def set_all_idle(self):
         #320 Mhz underclock
-        #payload = 'ffff000100000060220200' + g_tail
+        payload = 'ffff000100000060220200' + g_tail
         #288 Mhz underclock
         #payload = 'ffff000100000061240200' + g_tail
         #352 Mhz Stock Clock
         #payload = 'ffff0001000000a0220200' + g_tail
         # 384 Mhz Overclock
-        payload = 'ffff0001000000e0220200' + g_tail
+        #payload = 'ffff0001000000e0220200' + g_tail
         self.write_by_hex(payload)
 
     def set_all_active(self):
         #320 Mhz underclock
-        #payload = 'ffff000100000060220000' + g_tail
+        payload = 'ffff000100000060220000' + g_tail
         #288 Mhz underclock
         #payload = 'ffff000100000061240000' + g_tail
         #352 Mhz Stock Clock
         #payload = 'ffff0001000000a0220000' + g_tail
         # 384 Mhz Overclock
-        payload = 'ffff0001000000e0220000' + g_tail
+        #payload = 'ffff0001000000e0220000' + g_tail
         self.write_by_hex(payload)
 
     def calc_asic_cores(self, scan):
@@ -195,13 +195,13 @@ class AsicBoard(object):
                 print 'Scanning ASIC %s...' % chp
                 # set diagnosis mode
                 #320 Mhz underclock
-                #payload = chp + 'ff000100000060220100' + g_tail
+                payload = chp + 'ff000100000060220100' + g_tail
                 #288 Mhz underclock
                 #payload = chp + 'ff000100000061240100' + g_tail
                 #352 Mhz Stock Clock
                 #payload = chp + 'ff0001000000a0220100' + g_tail
                 # 384 Mhz Overclock
-                payload = chp + 'ff0001000000e0220100' + g_tail
+                #payload = chp + 'ff0001000000e0220100' + g_tail
                 self.write_by_hex(payload)
                 # give golden sample work, expect 'ecff6386ebd9'
                 # (chp | 0x80) only for diagnosis mode -- allow all answers get returned
@@ -253,13 +253,13 @@ class AsicBoard(object):
         for chp in sorted(self.asic):
             # setup nonce incremental = 0x0001
             #320 Mhz underclock
-            #payload = ('%s' % chp) + 'ff000100000060220000' + g_tail
+            payload = ('%s' % chp) + 'ff000100000060220000' + g_tail
             #288 Mhz underclock
             #payload = ('%s' % chp) + 'ff000100000061240000' + g_tail
             #352 Mhz Stock Clock
             #payload = ('%s' % chp) + 'ff0001000000a0220000' + g_tail
             # 384 Mhz Overclock
-            payload = ('%s' % chp) + 'ff0001000000e0220000' + g_tail
+            #payload = ('%s' % chp) + 'ff0001000000e0220000' + g_tail
             
             time.sleep(0.01)
             self.write_by_hex(payload)
@@ -490,8 +490,8 @@ class Miner(Thread):
             self.diff = 0x0000ffff00000000 / long(targetstr[48:64].decode('hex')[::-1].encode('hex'), 16)
             #self.work_timeout = self.diff * 65536 / 1000000 / 32
             self.work_timeout = self.diff * 3.0 / brd[self.bid].good_cores
-            if (self.work_timeout < 8):
-                self.work_timeout = 8
+            if (self.work_timeout < 15):
+                self.work_timeout = 15
         t = '0' * 48 + targetstr[48:64]
         payload = self.brd.give_work('ff', t, datastr)
         print '--(%s)-- diff: %0.2f, work_timeout: %0.2f' % (self.bid, self.diff, self.work_timeout)
