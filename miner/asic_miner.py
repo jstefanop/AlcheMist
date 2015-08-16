@@ -40,6 +40,7 @@ MAX_CHIPS = 32
 MAX_CLUSTERS = 6
 MAX_CORES = 9
 DEBUG = 0
+FREQUENCY = 320
 
 g_tail = '00000000000000000000000000000000a78e0100000001000000f615f7ce3b4fc6b8f61e8f89aedb1d0852507650533a9e3b10b9bbcc30639f279fcaa86746e1ef52d3edb3c4ad8259920d509bd073605c9bf1d59983752a6b06b817bb4ea78e011d012d59d4'
 
@@ -111,77 +112,81 @@ class AsicBoard(object):
     # setup all asics to run on PLL
     def set_pll(self):
         for chp in sorted(self.asic):
-            #320 Mhz underclock
-            payload = '%s'%chp + 'ff000100000000400c00' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000060620c00' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000060220400' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000060220000' + g_tail
-            self.write_by_hex(payload)
-            '''#288 Mhz underclock
-            payload = '%s'%chp + 'ff000100000000400c00' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000061640c00' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000061240400' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff000100000061240000' + g_tail
-            self.write_by_hex(payload)
-            '''
-            ''' #352 Mhz Stock Clock
-            payload = '%s'%chp + 'ff000100000000400c00' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff0001000000a0620c00' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff0001000000a0220400' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff0001000000a0220000' + g_tail
-            self.write_by_hex(payload)
-            '''
-            '''# 384 Mhz Overclock
-            payload = '%s'%chp + 'ff000100000000400c00' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff0001000000e0620c00' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff0001000000e0220400' + g_tail
-            self.write_by_hex(payload)
-            time.sleep(0.02)
-            payload = '%s'%chp + 'ff0001000000e0220000' + g_tail
-            self.write_by_hex(payload)
-            '''
+            
+            if FREQUENCY == 320 #320 Mhz underclock
+                payload = '%s'%chp + 'ff000100000000400c00' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff000100000060620c00' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff000100000060220400' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff000100000060220000' + g_tail
+                self.write_by_hex(payload)
+                print '320 Clock SET'
+            elif FREQUENCY == 288 #288 Mhz underclock
+                payload = '%s'%chp + 'ff000100000000400c00' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff000100000061640c00' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff000100000061240400' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff000100000061240000' + g_tail
+                self.write_by_hex(payload)
+                print '288 Clock SET'
+            elif FREQUENCY == 352 #352 Mhz Stock Clock
+                payload = '%s'%chp + 'ff000100000000400c00' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff0001000000a0620c00' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff0001000000a0220400' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff0001000000a0220000' + g_tail
+                self.write_by_hex(payload)
+                print '352 Clock SET'
+            elif FREQUENCY == 384 # 384 Mhz Overclock
+                payload = '%s'%chp + 'ff000100000000400c00' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff0001000000e0620c00' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff0001000000e0220400' + g_tail
+                self.write_by_hex(payload)
+                time.sleep(0.02)
+                payload = '%s'%chp + 'ff0001000000e0220000' + g_tail
+                self.write_by_hex(payload)
+                print '384 Clock SET'
+                
+
     def set_all_idle(self):
-        #320 Mhz underclock
-        payload = 'ffff000100000060220200' + g_tail
-        #288 Mhz underclock
-        #payload = 'ffff000100000061240200' + g_tail
-        #352 Mhz Stock Clock
-        #payload = 'ffff0001000000a0220200' + g_tail
-        # 384 Mhz Overclock
-        #payload = 'ffff0001000000e0220200' + g_tail
+        if FREQUENCY == 320 #320 Mhz underclock
+            payload = 'ffff000100000060220200' + g_tail
+        elif FREQUENCY == 288 #288 Mhz underclock
+            payload = 'ffff000100000061240200' + g_tail
+        elif FREQUENCY == 352 #352 Mhz Stock Clock
+            payload = 'ffff0001000000a0220200' + g_tail
+        elif FREQUENCY == 384 #384 Mhz Overclock
+            payload = 'ffff0001000000e0220200' + g_tail
         self.write_by_hex(payload)
 
     def set_all_active(self):
-        #320 Mhz underclock
-        payload = 'ffff000100000060220000' + g_tail
-        #288 Mhz underclock
-        #payload = 'ffff000100000061240000' + g_tail
-        #352 Mhz Stock Clock
-        #payload = 'ffff0001000000a0220000' + g_tail
-        # 384 Mhz Overclock
-        #payload = 'ffff0001000000e0220000' + g_tail
+        elif FREQUENCY == 320 #320 Mhz underclock
+            payload = 'ffff000100000060220000' + g_tail
+        elif FREQUENCY == 288 #288 Mhz underclock
+            payload = 'ffff000100000061240000' + g_tail
+        elif FREQUENCY == 352 #352 Mhz Stock Clock
+            payload = 'ffff0001000000a0220000' + g_tail
+        elif FREQUENCY == 384 #384 Mhz Overclock
+            payload = 'ffff0001000000e0220000' + g_tail
         self.write_by_hex(payload)
 
     def calc_asic_cores(self, scan):
@@ -195,14 +200,14 @@ class AsicBoard(object):
             for chp in sorted(self.asic):
                 print 'Scanning ASIC %s...' % chp
                 # set diagnosis mode
-                #320 Mhz underclock
-                payload = chp + 'ff000100000060220100' + g_tail
-                #288 Mhz underclock
-                #payload = chp + 'ff000100000061240100' + g_tail
-                #352 Mhz Stock Clock
-                #payload = chp + 'ff0001000000a0220100' + g_tail
-                # 384 Mhz Overclock
-                #payload = chp + 'ff0001000000e0220100' + g_tail
+                if FREQUENCY == 320 #320 Mhz underclock
+                    payload = chp + 'ff000100000060220100' + g_tail
+                elif FREQUENCY == 288 #288 Mhz underclock
+                    payload = chp + 'ff000100000061240100' + g_tail
+                elif FREQUENCY == 352 #352 Mhz Stock Clock
+                    payload = chp + 'ff0001000000a0220100' + g_tail
+                elif FREQUENCY == 384 #384 Mhz Overclock
+                    payload = chp + 'ff0001000000e0220100' + g_tail
                 self.write_by_hex(payload)
                 # give golden sample work, expect 'ecff6386ebd9'
                 # (chp | 0x80) only for diagnosis mode -- allow all answers get returned
@@ -253,14 +258,14 @@ class AsicBoard(object):
         n_offset = start_of_nonce
         for chp in sorted(self.asic):
             # setup nonce incremental = 0x0001
-            #320 Mhz underclock
-            payload = ('%s' % chp) + 'ff000100000060220000' + g_tail
-            #288 Mhz underclock
-            #payload = ('%s' % chp) + 'ff000100000061240000' + g_tail
-            #352 Mhz Stock Clock
-            #payload = ('%s' % chp) + 'ff0001000000a0220000' + g_tail
-            # 384 Mhz Overclock
-            #payload = ('%s' % chp) + 'ff0001000000e0220000' + g_tail
+            if FREQUENCY == 320 #320 Mhz underclock
+                payload = ('%s' % chp) + 'ff000100000060220000' + g_tail
+            elif FREQUENCY == 288 #288 Mhz underclock
+                payload = ('%s' % chp) + 'ff000100000061240000' + g_tail
+            elif FREQUENCY == 352 #352 Mhz Stock Clock
+                payload = ('%s' % chp) + 'ff0001000000a0220000' + g_tail
+            elif FREQUENCY == 384 #384 Mhz Overclock
+                payload = ('%s' % chp) + 'ff0001000000e0220000' + g_tail
             
             time.sleep(0.01)
             self.write_by_hex(payload)
@@ -474,6 +479,7 @@ class Miner(Thread):
         self.config = arg_config
         self.time_start = time.time()
         self.work_timeout = 0
+        self.block_timeout = 10
         self.targetstr = ''
         self.diff = 1
         self.work = None
@@ -483,7 +489,7 @@ class Miner(Thread):
     def check_work(self):
 
         try:
-            data = ans_queue[self.bid].get(timeout=self.work_timeout)
+            data = ans_queue[self.bid].get(timeout=self.block_timeout)
             dt = time.time() - self.time_start
             if (data == 'ffffffffffffffffff'):
                 print '==(%s)== clean job! <%0.2f>' % (self.bid, dt)
@@ -520,7 +526,7 @@ class Miner(Thread):
             self.diff = 0x0000ffff00000000 / long(targetstr[48:64].decode('hex')[::-1].encode('hex'), 16)
             #self.work_timeout = self.diff * 65536 / 1000000 / 32
             #self.work_timeout = self.diff * 3.0 / brd[self.bid].good_cores
-            self.work_timeout = 100
+            self.work_timeout = 124 * 354/FREQUENCY * 1728/brd[self.bid].good_cores
             t = '0' * 48 + targetstr[48:64]
             payload = self.brd.give_work('ff', t, datastr)
             print '--(%s)-- diff: %0.2f, work_timeout: %0.2f' % (self.bid, self.diff, self.work_timeout)
@@ -1055,6 +1061,8 @@ if __name__ == '__main__':
     com['05'] = Serial(config.p5_com, 115200, timeout=0.01)
     com['06'] = Serial(config.p6_com, 115200, timeout=0.01)
     com['07'] = Serial(config.p7_com, 115200, timeout=0.01)
+
+    FREQUENCY = config.frequency
 
     # Initialize AsicBoard and do reset
     print 'Initializing boards (reset, flush, setup PLL UNDERCLOCK)...'

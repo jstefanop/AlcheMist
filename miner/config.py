@@ -21,6 +21,7 @@ class ArgsConfig(object):
         self.password = None
         self.immediately_run = False
         self.force_diag = False
+        frequency = 320
         self.p0_reset = 'gpio117'
         self.p1_reset = 'gpio110'
         self.p2_reset = 'gpio111'
@@ -47,7 +48,7 @@ class ArgsConfig(object):
             if self.config.has_section(candidate) is False:
                 print '[%s] section does not exist!' % candidate
                 return False
-        for candidate in ['protocol', 'host', 'port', 'username', 'password', 'immediately_run', 'force_diag']:
+        for candidate in ['protocol', 'host', 'port', 'username', 'password', 'immediately_run', 'force_diag', 'frequency']:
             if self.config.has_option('pool', candidate) is False:
                 print '\'%s\' does not exist in section [%s]!' % (candidate, 'pool')
                 return False
@@ -66,7 +67,12 @@ class ArgsConfig(object):
         self.password = self.config.get('pool', 'password')
         self.immediately_run = self.config.get('pool', 'immediately_run')
         self.force_diag = self.config.get('pool', 'force_diag')
-
+        self.frequency = self.config.get('pool', 'frequency')
+        
+        while self.frequency not in [288, 320, 354, 384]:
+            print 'Valid frequency not in config, please input 288, 320, 354, or 384. Defaulting to 320mhz.'
+            self.frequency = 320
+        
         self.p0_reset = self.config.get('hardware', 'p0_reset')
         self.p0_com = self.config.get('hardware', 'p0_com')
         self.p1_reset = self.config.get('hardware', 'p1_reset')
@@ -95,7 +101,8 @@ class ArgsConfig(object):
         self.config.set('pool', 'password', self.password)
         self.config.set('pool', 'immediately_run', self.immediately_run)
         self.config.set('pool', 'force_diag', self.force_diag)
-
+        self.config.set('pool', 'frequency', self.frequency)
+        
         try:
             f = open(self.filename, 'w+')
             self.config.write(f)
