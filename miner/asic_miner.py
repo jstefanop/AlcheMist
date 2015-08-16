@@ -25,7 +25,9 @@ import socket
 import requests
 from requests.auth import HTTPBasicAuth
 
-VERSION = '1.2.4beta'
+VERSION = '1.3.0beta'
+#VERSION 1.3 and onwards is ONLY compataible with the updated FPGA firmware
+#You MUST flash your boards with the new firmware for this driver
 
 #------- hw.py --------
 #from serial import Serial
@@ -313,7 +315,7 @@ SUBMIT_Q_THROTTLE = 30
 WEB_REFRESH_TIME = 5
 LCM_REFRESH_TIME = 5
 REFRESH_KHRATE_TIME = 5
-STRATUM_CHK_INTERVAL = 30
+STRATUM_CHK_INTERVAL = 60
 
 rst = {'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
 com = {'00':None, '01':None, '02':None, '03':None, '04':None, '05':None, '06':None, '07':None}
@@ -471,31 +473,21 @@ class Miner(Thread):
         self.brd = board
         self.config = arg_config
         self.time_start = time.time()
-        self.work_timeout = 3
+        self.work_timeout = 0
         self.targetstr = ''
         self.diff = 1
+        self.work = None
         self.alche_protocol = alcheprotocol
         self.coin_rpc = CoinRPC(config.host, config.port, config.username, config.password)
 
-    def do_work(self, datastr, targetstr):
-        if (targetstr != self.targetstr):
-            self.targetstr = targetstr
-            self.diff = 0x0000ffff00000000 / long(targetstr[48:64].decode('hex')[::-1].encode('hex'), 16)
-            #self.work_timeout = self.diff * 65536 / 1000000 / 32
-            self.work_timeout = self.diff * 3.0 / brd[self.bid].good_cores
-            if (self.work_timeout < 8):
-                self.work_timeout = 8
-        t = '0' * 48 + targetstr[48:64]
-        payload = self.brd.give_work('ff', t, datastr)
-        print '--(%s)-- diff: %0.2f, work_timeout: %0.2f' % (self.bid, self.diff, self.work_timeout)
-        self.time_start = time.time()
-        reactor.callFromThread(AlcheProtocol.sendLine, self.alche_protocol, payload)
+    def check_work(self):
 
         try:
             data = ans_queue[self.bid].get(timeout=self.work_timeout)
             dt = time.time() - self.time_start
             if (data == 'ffffffffffffffffff'):
                 print '==(%s)== clean job! <%0.2f>' % (self.bid, dt)
+                self.work_timeout = 0
                 com_resp = ''
             else:
                 print '==(%s)== %s <%0.2f>' % (self.bid, data.encode('hex'), dt)
@@ -503,27 +495,48 @@ class Miner(Thread):
         except Queue.Empty:
             com_resp = ''
 
+
         return com_resp[:4]
 
+
     def iterate(self):
-        work = None
-        for i in range(5):
-            work = self.coin_rpc.getwork()
-            if (work is not None):
-                break
-        if work is None:
-            print 'ERR: Work is None'
-            return False
+       dt = time.time() - self.time_start
+       if dt > self.work_timeout:
+            self.work = None
+            for i in range(5):
+                self.work = self.coin_rpc.getwork()
+                if (self.work is not None):
+                    break
+            if self.work is None:
+                print 'ERR: Work is None'
+                return False
 
-        nonce_bin = self.do_work(work['data'], work['target'])
 
-        if len(nonce_bin) == 4:
-            submit_queue.put((self.bid, work['data'], work['target'], nonce_bin))
+            datastr = self.work['data']
+            targetstr = self.work['target']
+
+
+            self.targetstr = targetstr
+            self.diff = 0x0000ffff00000000 / long(targetstr[48:64].decode('hex')[::-1].encode('hex'), 16)
+            #self.work_timeout = self.diff * 65536 / 1000000 / 32
+            #self.work_timeout = self.diff * 3.0 / brd[self.bid].good_cores
+            self.work_timeout = 100
+            t = '0' * 48 + targetstr[48:64]
+            payload = self.brd.give_work('ff', t, datastr)
+            print '--(%s)-- diff: %0.2f, work_timeout: %0.2f' % (self.bid, self.diff, self.work_timeout)
+            self.time_start = time.time()
+            reactor.callFromThread(AlcheProtocol.sendLine, self.alche_protocol, payload)
+
+
+       nonce_bin = self.check_work()
+
+       if len(nonce_bin) == 4:
+            submit_queue.put((self.bid, self.work['data'], self.work['target'], nonce_bin))
             if (submit_queue.qsize() > SUBMIT_Q_THROTTLE):
                 print '...Nap for %0.2f sec...' % (active_brd_num * submit_queue.qsize() / SUBMIT_Q_THROTTLE)
                 time.sleep(active_brd_num * submit_queue.qsize() / SUBMIT_Q_THROTTLE)
 
-        return True
+       return True
 
     def run(self):
 
