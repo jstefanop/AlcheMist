@@ -21,7 +21,7 @@ class ArgsConfig(object):
         self.password = None
         self.immediately_run = False
         self.force_diag = False
-        frequency = 320
+        self.frequency = '320'
         self.p0_reset = 'gpio117'
         self.p1_reset = 'gpio110'
         self.p2_reset = 'gpio111'
@@ -69,9 +69,11 @@ class ArgsConfig(object):
         self.force_diag = self.config.get('pool', 'force_diag')
         self.frequency = self.config.get('pool', 'frequency')
         
-        while self.frequency not in [288, 320, 354, 384]:
+        
+        if not self.frequency in ['288', '320', '352', '384']:
             print 'Valid frequency not in config, please input 288, 320, 354, or 384. Defaulting to 320mhz.'
-            self.frequency = 320
+            self.frequency = '320'
+        self.frequency = int(self.frequency)
         
         self.p0_reset = self.config.get('hardware', 'p0_reset')
         self.p0_com = self.config.get('hardware', 'p0_com')
