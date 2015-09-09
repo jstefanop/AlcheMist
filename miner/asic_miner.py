@@ -541,7 +541,7 @@ class Miner(Thread):
             self.diff = 0x0000ffff00000000 / long(targetstr[48:64].decode('hex')[::-1].encode('hex'), 16)
             #self.work_timeout = self.diff * 65536 / 1000000 / 32
             #self.work_timeout = self.diff * 3.0 / brd[self.bid].good_cores
-            self.work_timeout = 120.0 * 354.0/FREQUENCY * 1728.0/brd[self.bid].good_cores
+            self.work_timeout = 120.0 * 352.0/FREQUENCY * 1728.0/brd[self.bid].good_cores
             t = '0' * 48 + targetstr[48:64]
             payload = self.brd.give_work('ff', t, datastr)
             print '--(%s)-- diff: %0.2f, work_timeout: %0.2f' % (self.bid, self.diff, self.work_timeout)
