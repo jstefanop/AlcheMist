@@ -1,5 +1,9 @@
 # AlcheMist
 
+This driver is obsolete...check out the bfgminer driver port for this miner here:
+
+https://github.com/jstefanop/bfgminer/tree/alchemist_driver
+
 
 This is the Python driver for the Alchemist Scrypt Alcheminer ASIC. This code has been updated and modified heavily by the community from the stock firmware, and provides much better stratum stability, updates to the web UI, and options for over/underclocking.
 
